@@ -1,0 +1,30 @@
+.HomeDiv {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; 
+    width: 100%;
+    margin-top: 10%;
+  }
+  
+  .HomeDiv1, .HomeDiv2, .HomDiv3 {
+    width: 150px; 
+    justify-content: center;
+    display: flex;
+    background-color: #7cbddb; 
+    margin: 10px;
+    margin-left: 3%;
+    text-align: center;
+    font-size: 30px;
+    border-radius: 5px;
+    color: rgb(27, 92, 46);
+    transition: background-color 0.3s ease;
+    height: 1%;
+  }
+  
+  .HomeDiv1:hover, .HomeDiv2:hover, .HomDiv3:hover {
+    background-color: #4397e6; 
+    cursor: pointer;
+  }
+  

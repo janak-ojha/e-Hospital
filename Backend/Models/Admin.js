@@ -23,7 +23,7 @@ const adminSchema = new mongoose.Schema({
         type:String,
         default:'Admin',
     },
-    verifytoken:{
+    verifytoken:{  //for password resetting process
         type:String,
     }
 },

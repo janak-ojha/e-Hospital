@@ -1,0 +1,88 @@
+/* FirstHome.css */
+
+.FirstHomeContainer {
+    display: flex;
+    width: 100%;
+    height: 100vh; 
+  }
+  
+  .FirstHomeSide1, .FirstHomeSide2 {
+    flex: 1; 
+    padding: 10px;
+    box-sizing: border-box;
+  }
+  
+  .FirstHomeSide1 {
+    background-color: #f0f0f0;
+  }
+  
+  .FirstHomeSide2 {
+    background-color: #d0d0d0;
+  }
+
+  .FirstHomeImage {
+    max-width: 100%;
+    max-height: 100%;
+    margin-top: 20%;
+    width: 100%;
+    object-fit: contain; 
+  }
+  
+.FirstHomeSide2 p {
+  margin: 0; /* Removes default margin */
+  padding: 0; /* Removes default padding */
+}
+.FirstHomeSide2 h1 {
+    margin: 0; /* Removes default margin */
+    padding: 0; 
+    font-size: 45px;/* Removes default padding */
+  }
+.FirstHomeSide2 p {
+    font-size: 16px;
+    line-height: 1.5; /* Adjust line height for readability */
+    margin-left: 20px; /* Ensure all paragraphs start from the same position */
+  }
+  .firstHomeButton {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    margin-top: 50px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .firstHomeButton:hover {
+    background-color: #0056b3;
+  }
+ 
+  
+  .HomeDiv {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; 
+    width: 100%;
+  }
+  
+  .HomeDiv1, .HomeDiv2, .HomDiv3 {
+    width: 300px; 
+    padding: 50px;
+    background-color: #7cbddb; 
+    margin: 10px;
+    margin-left: 34%;
+    text-align: center;
+    font-size: 30px;
+    border-radius: 5px;
+    color: rgb(27, 92, 46);
+    transition: background-color 0.3s ease;
+  }
+  
+  .HomeDiv1:hover, .HomeDiv2:hover, .HomDiv3:hover {
+    background-color: #4397e6; 
+    cursor: pointer;
+  }
+  
