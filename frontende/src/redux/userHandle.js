@@ -6,36 +6,73 @@ import {
     authFailed,
     authSuccess,
     authSuccessGetMessage,
-    getcanceldeletedcomponent,
-    getAdminDetail,
-    
+    getcanceldeletedcomponent,  
+    stuffAdded  
 } from "./userSlice";
 
-export const registerUser = (fields,currentUser) => async(dispatch) =>{
-    const {role} = fields;
-    console.log(role);
-    console.log(fields);
+// export const registerUser = (fields,currentUser) => async(dispatch) =>{
+//     const {role} = fields;
+//     console.log(role);
+//     console.log(fields);
+//     dispatch(authRequest());
+//     try {
+//         let result = await fetch(`http://localhost:5000/register${role}`,{
+//             method:"post",
+//             body:JSON.stringify(fields),
+//             headers:{
+//                 "Content-type":"application/json",
+//                 Authorization: `Bearer ${currentUser.token}`, 
+//             }
+//         });
+//         result=await result.json();
+//         if(result.data.email){
+//             dispatch(authSuccess(result));
+//         }else if(result.data.hospital){
+//             dispatch(stuffAdded());
+//         }
+//         else{
+//             dispatch(authFailed(result.message));
+//         }
+//     } catch (error) {
+//             dispatch(authError(error.message))
+//         }
+        
+//     }
+
+export const registerUser = (fields, currentUser) => async (dispatch) => {
+    const { role } = fields;
+
+    console.log("Role:", role);
+    console.log("Fields:", fields);
+
     dispatch(authRequest());
     try {
-        let result = await fetch(`http://localhost:5000/register${role}`,{
-            method:"post",
-            body:JSON.stringify(fields),
-            headers:{
-                "Content-type":"application/json",
-            }
+        // Make the API request
+        let response = await fetch(`http://localhost:5000/register${role}`, {
+            method: "POST",
+            body: JSON.stringify(fields),
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${currentUser.token}`, // Include JWT for protected route
+            },
         });
-        result=await result.json();
-        if(result.email){
-            dispatch(authSuccess(result));
-        }else{
-            dispatch(authFailed(result.message));
+
+        const result = await response.json();
+       console.log(result);
+        // Handle success or failure based on server response
+        if (response.ok) {
+            if (result.data && result.data.email) {
+                dispatch(authSuccess(result));
+            } else if (result.data && result.data.hospital) {
+                dispatch(stuffAdded());
+            }
+        } else {
+            dispatch(authFailed(result.message || "Registration failed"));
         }
     } catch (error) {
-            dispatch(authError(error.message))
-        }
-        
+        dispatch(authError(error.message || "Something went wrong"));
     }
-
+};
 export const loginUser = (fields, role) => async (dispatch) => {
    const { email, password } = fields;
    dispatch(authRequest());
@@ -79,18 +116,3 @@ export const handleResetPassword = (email,role)=> async (dispatch) => {
     }
 };
 
-// Action to get admin details
-export const AdminDetails = () => async (dispatch) => {
-    dispatch(authRequest());  // Dispatch loading state
-    try {
-        // Make the API call to fetch the admin details
-        const response = await axios.get(`http://localhost:5000/admindetails`);
-        console.log(response.data);  // Optionally log the response
-
-        // Dispatch the action to store the admin details in Redux state
-        dispatch(getAdminDetail(response.data));
-    } catch (error) {
-        // Dispatch the error state if there's an issue fetching the data
-        dispatch(authError("Error fetching admin details"));
-    }
-};

@@ -2,7 +2,7 @@ const jwt = require('jsonwebtoken');
 const Admin = require("../Models/Admin");
 const {request} = require("express");
 
-const jwtProject = async(req,res,next) => {
+const jwtProtect = async(req,res,next) => {
     let token;
     if(
         req.headers.authorization && 
@@ -22,4 +22,4 @@ const jwtProject = async(req,res,next) => {
         return res.status(401).json({error: "Not authorized ,no token"})
     }
 };
-module.exports = {jwtProject};
+module.exports = {jwtProtect};

@@ -184,15 +184,7 @@ const newPassword=async(req,res)=>{
     }
 };
 
-// getting all the detail off the admin
-const AdminDetail=async(req,res)=>{
-    try {
-        const admins=await Admin.find();
-        res.json(admins);
-    } catch (error) {
-       res.status(500).json({error:"error while fetching the details"}) 
-    }
-};
 
-module.exports={adminRegister,adminLogin,resetPasword,forgetPassword,newPassword,AdminDetail};
+
+module.exports={adminRegister,adminLogin,resetPasword,forgetPassword,newPassword};
  

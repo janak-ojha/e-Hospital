@@ -3,7 +3,7 @@ import {createSlice} from "@reduxjs/toolkit";
 const initialState={
     status:"idle",
     loading:false,
-    adminDetail:[],
+    tempDetails:[],
     currentUser:JSON.parse(localStorage.getItem("user")) || null,
     currentRole:(JSON.parse(localStorage.getItem("user")) || {}).role || null,
     deleteComponent: false,
@@ -47,12 +47,17 @@ const userSlice = createSlice({
             state.response = null;
             state.status ="idle";
         },
-        getAdminDetail: (state,action) =>{
-            state.adminDetail=action.payload;
-            state.loading=false;
-            state.error=null;
+        stuffAdded:(state,action) =>{
+            state.status='added';
             state.response=null;
-        }
+            state.error=null;
+            state.tempDetails=action.payload;
+        },
+        underControl: (state) => {
+            state.status = 'idle';
+            state.response = null;
+        },
+
     },
 });
 
@@ -64,5 +69,7 @@ export const{
     authError,
     getcanceldeletedcomponent,
     getAdminDetail,
+    stuffAdded,
+    underControl,
 }=userSlice.actions;
 export const userReducer = userSlice.reducer;

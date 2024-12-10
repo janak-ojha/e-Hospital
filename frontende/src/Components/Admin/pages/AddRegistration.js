@@ -1,79 +1,98 @@
-import { Box, Button, TextField, Grid, Typography, Paper, Select, MenuItem, FormControl, InputLabel } from '@mui/material';
-import React, { useState, useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux'; // Import Redux hooks
-import { AdminDetails } from '../../../redux/userHandle'; // Action to fetch admin details
+import React, { useState, useEffect } from "react";
+import {
+  Box,
+  Button,
+  TextField,
+  Grid,
+  Typography,
+  Paper,
+  CircularProgress,
+} from "@mui/material";
+import { useDispatch, useSelector } from "react-redux";
+import { registerUser } from "../../../redux/userHandle";
+import { useNavigate } from "react-router-dom";
+import Toast from "../../../Pages/Toast";
+import AddedSuccesfully from "../../../Pages/Toastse/AddedSuccesfully";
+
 
 const AddRegistration = () => {
-  // Declare state variables for each field
   const [name, setName] = useState("");
-  const [age, setAge] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const role = "Doctor";
+  const [message, setMessage] = useState("");
+  const [addedRegister, setAddedRegister] = useState(false);
+  const [loader, setLoader] = useState(false);
 
-  // Access adminDetails from Redux store
+  const role = "RegisterOffice";
+
   const dispatch = useDispatch();
-  const { adminDetail,currentUser } = useSelector((state) => state.user);
-  console.log(currentUser);
+  const { status, response } = useSelector((state) => state.user);
+  const navigate = useNavigate();
 
-  console.log(adminDetail);
-
-  // Fetch admin details when the component mounts
   useEffect(() => {
-    dispatch(AdminDetails()); // Fetch admin details from the backend
-  }, [dispatch]);
+    if (status === "added") {
+      setAddedRegister(true); // Trigger success toast
+      setLoader(false);
+      setTimeout(() => {
+        setAddedRegister(false); // Hide success toast
+        navigate("/"); // Redirect
+      }, 2000);
+    } else if (status === "failed") {
+      setMessage(response || "Registration failed."); // Set failure message
+      setLoader(false);
+      setTimeout(() => setMessage(""), 5000); // Clear failure message
+    } else if (status === "error") {
+      setMessage("Server is busy, try again later."); // Set server error message
+      setLoader(false);
+      setTimeout(() => setMessage(""), 5000); // Clear error message
+    }
+  }, [status, response, navigate]);
 
-  // Set the hospital name from the fetched admin details
-  const [hospitalName, setHospitalName] = useState("");
-
-  // Handle form submission
   const handleSubmit = (e) => {
     e.preventDefault();
-    // For now, just log the form data
-    console.log({
-      name,
-      hospitalName,
-      email,
-      password,
-      role
-    });
-
-    const field = { name, hospitalName, email, password, role };
-    // You can replace the console log with actual form submission logic (e.g., API call)
+    if (!name || !email || !password) {
+      setMessage("All fields are required.");
+      setTimeout(() => setMessage(""), 3000);
+      return;
+    }
+    setLoader(true);
+    const fields = { name, email, password, role };
+    dispatch(registerUser(fields));
   };
 
   return (
-    <>
-      {/* Main Container with center alignment */}
-      <Box 
+    <Box
+      sx={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        height: "100vh",
+        padding: 2,
+      }}
+    >
+      {/* Render success toast only when addedRegister is true */}
+      {addedRegister && <AddedSuccesfully/>}
+
+      {/* Render error toast only when message is set */}
+      {message && <Toast message={message} />}
+
+      <Paper
+        elevation={3}
         sx={{
-          display: 'flex', 
-          justifyContent: 'center', 
-          alignItems: 'center', 
-          height: '100vh', 
-          padding: 2
+          padding: 4,
+          borderRadius: 2,
+          width: "100%",
+          maxWidth: 600,
+          boxShadow: "0 4px 10px rgba(0, 0, 0, 0.1)",
         }}
       >
-        {/* Paper Container for a neat card-like design */}
-        <Paper
-          elevation={3}
-          sx={{
-            padding: 4,
-            borderRadius: 2,
-            width: '100%',
-            maxWidth: 600, // Maximum width for a smaller form
-            boxShadow: '0 4px 10px rgba(0, 0, 0, 0.1)',
-          }}
-        >
-          {/* Form Header */}
-          <Typography variant="h5" align="center" sx={{ marginBottom: 3 }}>
-            Add Registration
-          </Typography>
+        <Typography variant="h5" align="center" sx={{ marginBottom: 3 }}>
+          Add Registration
+        </Typography>
 
-          {/* Grid Layout for responsive form */}
-          <Grid container spacing={3}>
-            {/* Name Input */}
-            <Grid item xs={12} sm={6}>
+        <form onSubmit={handleSubmit}>
+          <Grid container spacing={3} direction="column">
+            <Grid item xs={12}>
               <TextField
                 required
                 fullWidth
@@ -82,34 +101,10 @@ const AddRegistration = () => {
                 variant="outlined"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                sx={{ borderRadius: 1 }}
               />
             </Grid>
 
-            {/* Hospital Name Dropdown */}
-            <Grid item xs={12} sm={6}>
-              <FormControl fullWidth required variant="outlined">
-                <InputLabel id="hospital-name-label">Hospital Name</InputLabel>
-                <Select
-                  labelId="hospital-name-label"
-                  id="hospital-name"
-                  value={hospitalName}
-                  onChange={(e) => setHospitalName(e.target.value)}
-                  label="Hospital Name"
-                  sx={{ borderRadius: 1 }}
-                >
-                  {/* Dynamically populate hospital names from adminDetail */}
-                  {adminDetail?.map((admin) => (
-                    <MenuItem key={admin._id} value={admin.hospitalName}>
-                      {admin.hospitalName}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            </Grid>
-
-            {/* Email Input */}
-            <Grid item xs={12} sm={6}>
+            <Grid item xs={12}>
               <TextField
                 required
                 fullWidth
@@ -119,12 +114,10 @@ const AddRegistration = () => {
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                sx={{ borderRadius: 1 }}
               />
             </Grid>
 
-            {/* Password Input */}
-            <Grid item xs={12} sm={6}>
+            <Grid item xs={12}>
               <TextField
                 required
                 fullWidth
@@ -134,34 +127,33 @@ const AddRegistration = () => {
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                sx={{ borderRadius: 1 }}
               />
             </Grid>
 
-            {/* Submit Button */}
             <Grid item xs={12}>
               <Button
                 fullWidth
+                type="submit"
                 variant="contained"
                 color="primary"
-                onClick={handleSubmit}
+                disabled={loader}
                 sx={{
                   padding: 1.5,
                   borderRadius: 1,
-                  boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
-                  '&:hover': {
-                    backgroundColor: '#1976d2',
-                    boxShadow: '0 6px 10px rgba(0, 0, 0, 0.15)',
+                  boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+                  "&:hover": {
+                    backgroundColor: "#1976d2",
+                    boxShadow: "0 6px 10px rgba(0, 0, 0, 0.15)",
                   },
                 }}
               >
-                Submit
+                {loader ? <CircularProgress size={24} /> : "Submit"}
               </Button>
             </Grid>
           </Grid>
-        </Paper>
-      </Box>
-    </>
+        </form>
+      </Paper>
+    </Box>
   );
 };
 

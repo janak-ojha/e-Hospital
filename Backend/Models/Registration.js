@@ -5,6 +5,11 @@ const RegistrationSchema = new mongoose.Schema({
        type:String,
        required:true,
     },
+    hospitalname:{
+        type:mongoose.Schema.Types.ObjectId,
+        ref:"Admin",
+        required:true,
+    },
     email:{
         type:String,
         required:true,
@@ -18,11 +23,7 @@ const RegistrationSchema = new mongoose.Schema({
         type:String,
         default:"Teacher",
     },
-    hospitalname:{
-        type:mongoose.Schema.Types.ObjectId,
-        ref:"Admin",
-        required:true,
-    }
+   
 },
 {timestamps:true});
 
