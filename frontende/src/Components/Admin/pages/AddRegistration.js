@@ -7,6 +7,8 @@ import {
   Typography,
   Paper,
   CircularProgress,
+  Select,
+  MenuItem,
 } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { registerUser } from "../../../redux/userHandle";
@@ -14,11 +16,11 @@ import { useNavigate } from "react-router-dom";
 import Toast from "../../../Pages/Toast";
 import AddedSuccesfully from "../../../Pages/Toastse/AddedSuccesfully";
 
-
 const AddRegistration = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [officerLevel, setOfficerLevel] = useState("");
   const [message, setMessage] = useState("");
   const [addedRegister, setAddedRegister] = useState(false);
   const [loader, setLoader] = useState(false);
@@ -50,13 +52,13 @@ const AddRegistration = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!name || !email || !password) {
+    if (!name || !email || !password || !officerLevel) {
       setMessage("All fields are required.");
       setTimeout(() => setMessage(""), 3000);
       return;
     }
     setLoader(true);
-    const fields = { name, email, password, role };
+    const fields = { name, email, password, role, officerLevel };
     dispatch(registerUser(fields));
   };
 
@@ -71,7 +73,7 @@ const AddRegistration = () => {
       }}
     >
       {/* Render success toast only when addedRegister is true */}
-      {addedRegister && <AddedSuccesfully/>}
+      {addedRegister && <AddedSuccesfully />}
 
       {/* Render error toast only when message is set */}
       {message && <Toast message={message} />}
@@ -114,6 +116,7 @@ const AddRegistration = () => {
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
+                autoComplete="username"
               />
             </Grid>
 
@@ -127,7 +130,26 @@ const AddRegistration = () => {
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
+                autoComplete="new-password"
               />
+            </Grid>
+
+            <Grid item xs={12}>
+              <Select
+                required
+                fullWidth
+                id="officerLevel"
+                value={officerLevel}
+                onChange={(e) => setOfficerLevel(e.target.value)}
+                displayEmpty
+              >
+                <MenuItem value="" disabled>
+                  Select Officer Level
+                </MenuItem>
+                <MenuItem value="Level 1">Level 1</MenuItem>
+                <MenuItem value="Level 2">Level 2</MenuItem>
+                <MenuItem value="Level 3">Level 3</MenuItem>
+              </Select>
             </Grid>
 
             <Grid item xs={12}>

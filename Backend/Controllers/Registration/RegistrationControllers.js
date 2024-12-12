@@ -3,7 +3,7 @@ const Registeroffice = require("../../Models/Registration");
 
 // Register Office Handler
 const RegisterOffice = async (req, res) => {
-    const { name, hospitalname, email, password, role } = req.body;
+    const { name, hospitalname, email, password, role,officerLevel } = req.body;
 
     try {
         // Check if email already exists
@@ -15,14 +15,15 @@ const RegisterOffice = async (req, res) => {
         // Hash the password
         const salt = await bcrypt.genSalt(10);
         const hashedPass = await bcrypt.hash(password, salt);
-
+         
         // Create a new registration entry
         const newRegister = new Registeroffice({
             name,
-            hospitalname,
+            hospitalname: req.user.id,
             email,
             role,
             password: hashedPass,
+            officerLevel
         });
 
         // Save the registration to the database

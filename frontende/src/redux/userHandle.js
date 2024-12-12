@@ -47,32 +47,34 @@ export const registerUser = (fields, currentUser) => async (dispatch) => {
 
     dispatch(authRequest());
     try {
-        // Make the API request
-        let response = await fetch(`http://localhost:5000/register${role}`, {
-            method: "POST",
-            body: JSON.stringify(fields),
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${currentUser.token}`, // Include JWT for protected route
-            },
-        });
-
-        const result = await response.json();
-       console.log(result);
-        // Handle success or failure based on server response
-        if (response.ok) {
-            if (result.data && result.data.email) {
-                dispatch(authSuccess(result));
-            } else if (result.data && result.data.hospital) {
-                dispatch(stuffAdded());
-            }
-        } else {
-            dispatch(authFailed(result.message || "Registration failed"));
+      const response = await fetch(`http://localhost:5000/register${role}`, {
+        method: "POST",
+        body: JSON.stringify(fields),
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${currentUser.token}`, // Ensure valid JWT
+        },
+      });
+      
+      const result = await response.json();
+      console.log(result); // Debugging
+    
+      if (response.ok) {
+        if (result.data && result.data.email) {
+          dispatch(authSuccess(result.data)); // Pass email data to authSuccess
         }
+        if (result.level) {
+          dispatch(stuffAdded({ level: result.level })); // Pass level data to stuffAdded
+        }
+      } else {
+        dispatch(authFailed(result.message || "Registration failed"));
+      }
     } catch (error) {
-        dispatch(authError(error.message || "Something went wrong"));
+      dispatch(authError(error.message || "Something went wrong"));
     }
+    
 };
+
 export const loginUser = (fields, role) => async (dispatch) => {
    const { email, password } = fields;
    dispatch(authRequest());

@@ -49,8 +49,7 @@ const userSlice = createSlice({
         },
         stuffAdded:(state,action) =>{
             state.status='added';
-            state.response=null;
-            state.error=null;
+            state.loading=false;
             state.tempDetails=action.payload;
         },
         underControl: (state) => {
