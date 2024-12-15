@@ -23,6 +23,10 @@ const RegistrationSchema = new mongoose.Schema({
         type:String,
         default:"Teacher",
     },
+    officerLevel:{
+        type:String,
+        required:true,
+    },
    
 },
 {timestamps:true});

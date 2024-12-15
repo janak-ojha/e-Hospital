@@ -3,7 +3,6 @@ import {createSlice} from "@reduxjs/toolkit";
 const initialState={
     status:"idle",
     loading:false,
-    tempDetails:[],
     currentUser:JSON.parse(localStorage.getItem("user")) || null,
     currentRole:(JSON.parse(localStorage.getItem("user")) || {}).role || null,
     deleteComponent: false,
@@ -48,9 +47,8 @@ const userSlice = createSlice({
             state.status ="idle";
         },
         stuffAdded:(state,action) =>{
-            state.status='added';
+            state.status="added";
             state.loading=false;
-            state.tempDetails=action.payload;
         },
         underControl: (state) => {
             state.status = 'idle';

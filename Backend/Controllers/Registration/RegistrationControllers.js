@@ -3,7 +3,7 @@ const Registeroffice = require("../../Models/Registration");
 
 // Register Office Handler
 const RegisterOffice = async (req, res) => {
-    const { name, hospitalname, email, password, role,officerLevel } = req.body;
+    const { name, email, password, role,officerLevel } = req.body;
 
     try {
         // Check if email already exists
@@ -25,15 +25,15 @@ const RegisterOffice = async (req, res) => {
             password: hashedPass,
             officerLevel
         });
-
+       
         // Save the registration to the database
         const result = await newRegister.save();
+        console.log(result);
         result.password = undefined; // Do not return the password in the response
 
-        return res.status(201).json({ message: "Registration successful", data: result });
+         return res.status(201).json({ message: "Registration added successfully", data: result });
     } catch (error) {
-        console.error("Error during registration:", error);
-        return res.status(500).json({ message: "Internal Server Error", error: error.message });
+        return res.status(500).json({ message: "Internal Server Error"});
     }
 };
 

@@ -10,70 +10,28 @@ import {
     stuffAdded  
 } from "./userSlice";
 
-// export const registerUser = (fields,currentUser) => async(dispatch) =>{
-//     const {role} = fields;
-//     console.log(role);
-//     console.log(fields);
-//     dispatch(authRequest());
-//     try {
-//         let result = await fetch(`http://localhost:5000/register${role}`,{
-//             method:"post",
-//             body:JSON.stringify(fields),
-//             headers:{
-//                 "Content-type":"application/json",
-//                 Authorization: `Bearer ${currentUser.token}`, 
-//             }
-//         });
-//         result=await result.json();
-//         if(result.data.email){
-//             dispatch(authSuccess(result));
-//         }else if(result.data.hospital){
-//             dispatch(stuffAdded());
-//         }
-//         else{
-//             dispatch(authFailed(result.message));
-//         }
-//     } catch (error) {
-//             dispatch(authError(error.message))
-//         }
-        
-//     }
-
-export const registerUser = (fields, currentUser) => async (dispatch) => {
-    const { role } = fields;
-
-    console.log("Role:", role);
-    console.log("Fields:", fields);
-
+export const registerUser = (fields,currentUser) => async(dispatch) =>{
+    const {role} = fields;
+    console.log(role);
+    console.log(fields);
     dispatch(authRequest());
     try {
-      const response = await fetch(`http://localhost:5000/register${role}`, {
-        method: "POST",
-        body: JSON.stringify(fields),
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${currentUser.token}`, // Ensure valid JWT
-        },
-      });
-      
-      const result = await response.json();
-      console.log(result); // Debugging
-    
-      if (response.ok) {
-        if (result.data && result.data.email) {
-          dispatch(authSuccess(result.data)); // Pass email data to authSuccess
+         const result = await axios.post(`http://localhost:5000/register${role}`, fields, {
+            headers: { 'Content-Type': 'application/json' },
+        });
+        console.log(result);
+        if(result.data.hospitalname){
+            dispatch(authSuccess(result.data));
         }
-        if (result.level) {
-          dispatch(stuffAdded({ level: result.level })); // Pass level data to stuffAdded
+        else{
+            dispatch(authFailed(result.data.message));
         }
-      } else {
-        dispatch(authFailed(result.message || "Registration failed"));
-      }
     } catch (error) {
-      dispatch(authError(error.message || "Something went wrong"));
+            dispatch(authError(error))
+        }
+        
     }
-    
-};
+
 
 export const loginUser = (fields, role) => async (dispatch) => {
    const { email, password } = fields;

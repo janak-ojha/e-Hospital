@@ -17,8 +17,11 @@ const Registration = () => {
 
 
   useEffect(() => {
-    if (status === 'success') {
-      navigate('/AdminHome');
+    console.log("Status: ", status);
+  console.log("Response: ", response);
+  console.log("Current User: ", currentUser);
+    if (status === "success") {
+      navigate('/Adminhome');
     } else if (status === 'failed') {
       setMessage(response);
       setTimeout(() => setMessage(''), 5000);
