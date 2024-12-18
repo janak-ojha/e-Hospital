@@ -12,7 +12,6 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { cancelDelete, registerUser } from "../../../redux/userHandle";
 import { useNavigate } from "react-router-dom";
-import AddedSuccesfully from "../../../Pages/Toastse/AddedSuccesfully";
 
 const AddRegistration = () => {
   const [name, setName] = useState("");
@@ -20,37 +19,49 @@ const AddRegistration = () => {
   const [password, setPassword] = useState("");
   const [officerLevel, setOfficerLevel] = useState("");
   const [message, setMessage] = useState("");
-
+  
   const role = "RegisterOffice"; // Defined role
 
   const dispatch = useDispatch();
+  const navigate=useNavigate();
   const { status, response, currentUser } = useSelector((state) => state.user);
-  const navigate = useNavigate();
 
   useEffect(() => {
-    console.log(status);
-    if (status === "added" || response === "Email already exists") {
-     const timeout= setTimeout(() => {
-        dispatch(cancelDelete()); 
-      }, 5000);
-      return () => clearTimeout(timeout);
-    } 
-  }, [status,dispatch]); // Make sure to include dispatch and navigate in dependencies
+    // Display appropriate messages based on the status or response
+    if (status === "added") {
+      setMessage("Registration successful!");
+      setTimeout(() => setMessage(""), 3000); // Clear message after 3 seconds
+      dispatch(cancelDelete());
+      navigate("/showRegistration");
+    } else if (response === "Email already exists") {
+      setMessage("Email already exists. Please try again.");
+      setTimeout(() => setMessage(""), 3000); // Clear message after 3 seconds
+    } else if (status === "error") {
+      setMessage(response || "Email already exist.");
+      setTimeout(() => setMessage(""), 3000); // Clear message after 3 seconds
+    }
+  }, [status, response, dispatch]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    // Ensure all fields are filled
     if (!name || !email || !password || !officerLevel) {
       setMessage("All fields are required.");
-      setTimeout(() => setMessage(""), 3000); // Clear message after 3 seconds
+      setTimeout(() => setMessage(""), 3000);
       return;
     }
-    const fields = { name, email, password, role, officerLevel };
+
+    // Ensure user is authenticated
     if (!currentUser || !currentUser.token) {
       setMessage("You are not authenticated. Please log in.");
-      setTimeout(() => setMessage(""), 3000); // Clear message after 3 seconds
+      setTimeout(() => setMessage(""), 3000);
       return;
     }
-    dispatch(registerUser(fields, currentUser)); // Pass currentUser to registerUser
+
+    // Dispatch registration action
+    const fields = { name, email, password, role, officerLevel };
+    dispatch(registerUser(fields, currentUser)); // Pass fields and token
   };
 
   return (
@@ -63,7 +74,6 @@ const AddRegistration = () => {
         padding: 2,
       }}
     >
-  
       <Paper
         elevation={3}
         sx={{
@@ -77,10 +87,16 @@ const AddRegistration = () => {
         <Typography variant="h5" align="center" sx={{ marginBottom: 3 }}>
           Add Registration
         </Typography>
-        {response==="added"?<AddedSuccesfully/>:""}
-        {/* Show message if registration fails or succeeds */}
-        {response === "Email already exists"?<p style={{color:"red"}}>{response}</p>:""}
 
+        <Typography
+  align="center"
+  sx={{
+    color: message === "Registration successful!" ? "green" : "red",
+    marginBottom: 2,
+  }}
+>
+  {message}
+</Typography>
         <form onSubmit={handleSubmit}>
           <Grid container spacing={3} direction="column">
             <Grid item xs={12}>

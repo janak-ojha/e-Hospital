@@ -17,9 +17,6 @@ const Registration = () => {
 
 
   useEffect(() => {
-    console.log("Status: ", status);
-  console.log("Response: ", response);
-  console.log("Current User: ", currentUser);
     if (status === "success") {
       navigate('/Adminhome');
     } else if (status === 'failed') {

@@ -8,6 +8,7 @@ const initialState={
     deleteComponent: false,
     error:null,
     response:null,
+    tempRegisterDetail: [],
     
 }
 
@@ -46,15 +47,25 @@ const userSlice = createSlice({
             state.response = null;
             state.status ="idle";
         },
-        stuffAdded:(state,action) =>{
+        stuffAdded:(state) =>{
             state.status="added";
             state.loading=false;
+            state.error = null;
         },
         underControl: (state) => {
             state.status = 'idle';
             state.response = null;
         },
-
+        getRofficedetail:(state,action) =>{
+            state.loading=false;
+            state.tempRegisterDetail=action.payload;
+        },
+        logout: (state) => {
+            state.currentUser = null;
+            state.currentRole = null;
+            state.status = "idle";
+            localStorage.removeItem("user"); // Clear user data from local storage
+          },
     },
 });
 
@@ -68,5 +79,7 @@ export const{
     getAdminDetail,
     stuffAdded,
     underControl,
+    getRofficedetail,
+    logout,
 }=userSlice.actions;
 export const userReducer = userSlice.reducer;

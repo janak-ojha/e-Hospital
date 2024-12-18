@@ -2,7 +2,7 @@
 const express = require('express');
 const router = express.Router(); 
 const {adminRegister, adminLogin,resetPasword,forgetPassword,newPassword,AdminDetail} = require("../Controllers/Admin/AdminController.js")
-const {RegisterOffice} = require("../Controllers/Registration/RegistrationControllers.js");
+const {RegisterOffice,GetAllRegisteredUsers, deleteRegisterUser, updateRegisterUser} = require("../Controllers/Registration/RegistrationControllers.js");
 const { jwtProtect } = require('../Middleware/authMiddleware.js');
 
 
@@ -19,6 +19,10 @@ router.get("/newpassword/:id/:token/:role",newPassword);
 
 // Register Office Routes
 router.post("/registerRegisterOffice", jwtProtect, RegisterOffice);
+router.get("/registeredDetail",jwtProtect,GetAllRegisteredUsers);
+router.delete("/deleteRegisterUser/:id", jwtProtect, deleteRegisterUser);
+router.put("/updateRegisterUser/:id", jwtProtect, updateRegisterUser);
+
 
 
 
