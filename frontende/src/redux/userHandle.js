@@ -11,35 +11,74 @@ import {
     stuffAdded  
 } from "./userSlice";
 
-export const registerUser = (fields,currentUser) => async(dispatch) =>{
-    const {role} = fields;
+// export const registerUser = (fields,currentUser) => async(dispatch) =>{
+//     const {role} = fields;
+//     console.log(role);
+//     console.log(fields);
+//     dispatch(authRequest());
+//     try {
+//          const result = await axios.post(`http://localhost:5000/register${role}`, fields, {
+//             headers: { 'Content-Type': 'application/json' ,
+//                 Authorization:`Bearer ${currentUser?.token}`,
+//             },
+//         });
+//         console.log(result);
+//         if(result.data.email && result.data.officerLevel){
+//             dispatch(stuffAdded());
+//         }
+//         else if(result.data.email){
+//            dispatch(authSuccess(result));
+//         }
+//         else{
+//             dispatch(authFailed(result.message));
+//         }
+//     } catch (error) {
+//         console.error('Error:', error.response?.data?.message || error.message);
+//         dispatch(authError(error.response?.data?.message || error.message));
+//         }
+        
+//     }
+
+export const registerUser = (fields, currentUser) => async (dispatch) => {
+    const { role } = fields;
     console.log(role);
     console.log(fields);
     dispatch(authRequest());
+
     try {
-        const token = localStorage.getItem("token") || currentUser?.token;
-        console.log(token);
-         const result = await axios.post(`http://localhost:5000/register${role}`, fields, {
-            headers: { 'Content-Type': 'application/json' ,
-                 Authorization: `Bearer ${token}`,
-            },
-        });
+        const result = await axios.post(
+            `http://localhost:5000/register${role}`,
+            fields,
+            {
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${currentUser?.token}`,
+                },
+            }
+        );
         console.log(result);
-        if(result.data.email && result.data.officerLevel){
+
+        // Extract only the necessary data to avoid serializing non-serializable headers
+        const { data } = result;
+        console.log(data);
+        if (data.email && data.officerLevel) {
             dispatch(stuffAdded());
+        }else if(data.doctorEmail && data.doctorType){
+           
+            dispatch(stuffAdded());  
         }
-        else if(result.data.email){
-           dispatch(authSuccess());
-        }
-        else{
+         else if (data.email) {
+            // Only pass the serializable data (result.data) to the action
+            dispatch(authSuccess(data)); // Pass the response data only, not headers
+        } else {
             dispatch(authFailed(result.message));
         }
     } catch (error) {
         console.error('Error:', error.response?.data?.message || error.message);
         dispatch(authError(error.response?.data?.message || error.message));
-        }
-        
     }
+};
+
 // export const registerUser = (fields,currentUser) => async(dispatch) =>{
 //     const {role} = fields;
 //     console.log(role);

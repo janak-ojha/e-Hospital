@@ -19,28 +19,33 @@ const AddRegistration = () => {
   const [password, setPassword] = useState("");
   const [officerLevel, setOfficerLevel] = useState("");
   const [message, setMessage] = useState("");
-  
+  const [loader, setLoader] = useState(false); // Loader state
+
   const role = "RegisterOffice"; // Defined role
 
   const dispatch = useDispatch();
-  const navigate=useNavigate();
+  const navigate = useNavigate();
   const { status, response, currentUser } = useSelector((state) => state.user);
 
   useEffect(() => {
-    // Display appropriate messages based on the status or response
     if (status === "added") {
       setMessage("Registration successful!");
-      setTimeout(() => setMessage(""), 3000); // Clear message after 3 seconds
-      dispatch(cancelDelete());
-      navigate("/showRegistration");
+      setLoader(false); // Stop loader
+      setTimeout(() => {
+        setMessage("");
+        dispatch(cancelDelete());
+        navigate("/showRegistration");
+      }, 3000);
     } else if (response === "Email already exists") {
       setMessage("Email already exists. Please try again.");
-      setTimeout(() => setMessage(""), 3000); // Clear message after 3 seconds
+      setLoader(false); // Stop loader
+      setTimeout(() => setMessage(""), 3000);
     } else if (status === "error") {
-      setMessage(response || "Email already exist.");
-      setTimeout(() => setMessage(""), 3000); // Clear message after 3 seconds
+      setMessage(response || "An error occurred.");
+      setLoader(false); // Stop loader
+      setTimeout(() => setMessage(""), 3000);
     }
-  }, [status, response, dispatch]);
+  }, [status, response, dispatch, navigate]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -60,6 +65,7 @@ const AddRegistration = () => {
     }
 
     // Dispatch registration action
+    setLoader(true); // Start loader
     const fields = { name, email, password, role, officerLevel };
     dispatch(registerUser(fields, currentUser)); // Pass fields and token
   };
@@ -89,14 +95,14 @@ const AddRegistration = () => {
         </Typography>
 
         <Typography
-  align="center"
-  sx={{
-    color: message === "Registration successful!" ? "green" : "red",
-    marginBottom: 2,
-  }}
->
-  {message}
-</Typography>
+          align="center"
+          sx={{
+            color: message === "Registration successful!" ? "green" : "red",
+            marginBottom: 2,
+          }}
+        >
+          {message}
+        </Typography>
         <form onSubmit={handleSubmit}>
           <Grid container spacing={3} direction="column">
             <Grid item xs={12}>
@@ -172,8 +178,9 @@ const AddRegistration = () => {
                     boxShadow: "0 6px 10px rgba(0, 0, 0, 0.15)",
                   },
                 }}
+                disabled={loader} // Disable button while loading
               >
-                Submit
+                {loader ? <div className="load"></div> : "Submit"}
               </Button>
             </Grid>
           </Grid>

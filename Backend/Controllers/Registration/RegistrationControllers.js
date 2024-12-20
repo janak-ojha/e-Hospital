@@ -39,7 +39,7 @@ const RegisterOffice = async (req, res) => {
 const GetAllRegisteredUsers = async (req, res) => {
     try {
         // Fetch all registered users and populate 'hospitalname' with the 'name' field
-        const registeredUsers = await Registeroffice.find()
+        const registeredUsers = await Registeroffice.find({ hospitalname: req.user.id })
             .select("-password")  // Exclude password
             .populate("hospitalname", "hospitalname"); // Populate the 'hospitalname' field with the 'name' property
 

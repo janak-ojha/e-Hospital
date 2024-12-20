@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { registerUser } from '../../redux/userHandle';
 import { useSelector, useDispatch } from 'react-redux';
 
+
 const Registration = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -17,10 +18,11 @@ const Registration = () => {
 
 
   useEffect(() => {
+    console.log(status);
     if (status === "success") {
       navigate('/Adminhome');
     } else if (status === 'failed') {
-      setMessage(response);
+      setMessage("Email already exist|| hospital name already exist");
       setTimeout(() => setMessage(''), 5000);
     } else if (status === 'error') {
       setMessage('Server is busy, try again later.');
@@ -103,6 +105,7 @@ const Registration = () => {
             value={formData.username}
             onChange={handleChange}
             sx={{ marginBottom: 2 }}
+            autoComplete="username"
           />
           <TextField
             fullWidth
@@ -122,6 +125,7 @@ const Registration = () => {
             value={formData.email}
             onChange={handleChange}
             sx={{ marginBottom: 2 }}
+            autoComplete='email'
           />
           <TextField
             fullWidth
@@ -132,6 +136,7 @@ const Registration = () => {
             value={formData.password}
             onChange={handleChange}
             sx={{ marginBottom: 3 }}
+            autoComplete="current-password"
           />
 
           {/* Submit Button */}
