@@ -8,36 +8,11 @@ import {
     authSuccessGetMessage,
     getcanceldeletedcomponent,  
     getRofficedetail,
-    stuffAdded  
+    getDoctorDetail,
+    stuffAdded,  
+    getPharmaDetail
 } from "./userSlice";
 
-// export const registerUser = (fields,currentUser) => async(dispatch) =>{
-//     const {role} = fields;
-//     console.log(role);
-//     console.log(fields);
-//     dispatch(authRequest());
-//     try {
-//          const result = await axios.post(`http://localhost:5000/register${role}`, fields, {
-//             headers: { 'Content-Type': 'application/json' ,
-//                 Authorization:`Bearer ${currentUser?.token}`,
-//             },
-//         });
-//         console.log(result);
-//         if(result.data.email && result.data.officerLevel){
-//             dispatch(stuffAdded());
-//         }
-//         else if(result.data.email){
-//            dispatch(authSuccess(result));
-//         }
-//         else{
-//             dispatch(authFailed(result.message));
-//         }
-//     } catch (error) {
-//         console.error('Error:', error.response?.data?.message || error.message);
-//         dispatch(authError(error.response?.data?.message || error.message));
-//         }
-        
-//     }
 
 export const registerUser = (fields, currentUser) => async (dispatch) => {
     const { role } = fields;
@@ -64,8 +39,9 @@ export const registerUser = (fields, currentUser) => async (dispatch) => {
         if (data.email && data.officerLevel) {
             dispatch(stuffAdded());
         }else if(data.doctorEmail && data.doctorType){
-           
             dispatch(stuffAdded());  
+        }else if(data.pharmacistEmail && data.pharmacistName){
+            dispatch(stuffAdded());
         }
          else if (data.email) {
             // Only pass the serializable data (result.data) to the action
@@ -78,35 +54,6 @@ export const registerUser = (fields, currentUser) => async (dispatch) => {
         dispatch(authError(error.response?.data?.message || error.message));
     }
 };
-
-// export const registerUser = (fields,currentUser) => async(dispatch) =>{
-//     const {role} = fields;
-//     console.log(role);
-//     console.log(fields);
-//     dispatch(authRequest());
-//     try {
-//          const result = await axios.post(`http://localhost:5000/register${role}`, fields, {
-//             headers: { 'Content-Type': 'application/json' ,
-//                 Authorization:`Bearer ${currentUser?.token}`,
-//             },
-//         });
-//         console.log(result);
-//         if(result.data.email && result.data.officerLevel){
-//             dispatch(stuffAdded());
-//         }
-//         else if(result.data){
-//            dispatch(authSuccess());
-//         }
-//         else{
-//             dispatch(authFailed(result.message));
-//         }
-//     } catch (error) {
-        
-//         dispatch(authError(error));
-//         }
-        
-//     }
-
 
 
 export const loginUser = (fields, role) => async (dispatch) => {
@@ -204,7 +151,132 @@ export const RegistrationhandleDelete = (id, currentUser) => async (dispatch) =>
 };
 
 
+///***** Doctorpart  *****///
 
+
+export const fetchDoctorDetail = (currentUser) => async (dispatch) => {
+    dispatch(authRequest());
+    try {
+        const token = localStorage.getItem("token") || currentUser?.token;
+        console.log(token);
+        
+        // Make API call
+        const response = await axios.get(`http://localhost:5000/doctorDetail`, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+
+        console.log("Doctor Users:", response.data);
+
+        // Dispatch response data to Redux store
+        dispatch(getDoctorDetail(response.data));
+    } catch (error) {
+        console.error("Error fetching registered users:", error.response?.data || error.message);
+        dispatch(authError(error.response?.data || error.message));
+    }
+};
+
+//deleting the doctor  detail by id
+export const DoctorhandleDelete = (id, currentUser) => async (dispatch) => {
+    try {
+      const token = localStorage.getItem("token") || currentUser?.token;
+      const response = await axios.delete(`http://localhost:5000/deleteDoctor/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      console.log(response.data.message);  // Logs success message
+      dispatch(fetchDoctorDetail(currentUser));  // Fetch the updated list of users
+    } catch (error) {
+     // If an error occurs, log it to the console
+     console.error("Error updating user:", error.response ? error.response.data : error.message);
+     dispatch(authError(error.response?.data || error.message));
+    }
+  };
+
+
+//update the doctorDetail: 
+export const DeletehandleUpdate = (id, userdata, currentUser) => async (dispatch) => {
+    console.log(userdata);
+    try {
+        const token = localStorage.getItem("token") || currentUser?.token;
+        
+        // Send the PUT request to update the user
+        const response = await axios.put(`http://localhost:5000/updateDoctor/${id}`, userdata, {
+            headers: {
+                "Authorization": `Bearer ${token}`, 
+                "Content-Type": "application/json",
+            },
+        });
+        console.log("User updated successfully:", response.data);
+        dispatch(fetchDoctorDetail(currentUser)); 
+        return response.data;
+    } catch (error) {
+        // If an error occurs, log it to the console
+        console.error("Error updating user:", error.response ? error.response.data : error.message);
+    }
+};
+
+
+
+///////************ Pharmaparts  **********///////
+
+
+// get pharma user details
+export const fetchPharmaDetail = (currentUser) => async (dispatch) => {
+    dispatch(authRequest());
+    try {
+        const token = localStorage.getItem("token") || currentUser?.token;
+        console.log(token);
+        // Make API call
+        const response = await axios.get(`http://localhost:5000/pharmaDetail`, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+        console.log("Doctor Users:", response.data);
+        // Dispatch response data to Redux store
+        dispatch(getPharmaDetail(response.data));
+    } catch (error) {
+        console.error("Error fetching registered users:", error.response?.data || error.message);
+        dispatch(authError(error.response?.data || error.message));
+    }
+};
+//deleting the doctor  detail by id
+export const PharmahandleDelete = (id, currentUser) => async (dispatch) => {
+    try {
+      const token = localStorage.getItem("token") || currentUser?.token;
+      const response = await axios.delete(`http://localhost:5000/deletePharma/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      console.log(response.data.message);  
+      dispatch(fetchPharmaDetail(currentUser));  
+    } catch (error) {
+     console.error("Error updating user:", error.response ? error.response.data : error.message);
+     dispatch(authError(error.response?.data || error.message));
+    }
+  };
+//update the doctorDetail: 
+export const PharmahandleUpdate = (id, userdata, currentUser) => async (dispatch) => {
+    console.log(userdata);
+    try {
+        const token = localStorage.getItem("token") || currentUser?.token;
+        const response = await axios.put(`http://localhost:5000/updatePharma/${id}`, userdata, {
+            headers: {
+                "Authorization": `Bearer ${token}`, 
+                "Content-Type": "application/json",
+            },
+        });
+        console.log("User updated successfully:", response.data);
+        dispatch(fetchPharmaDetail(currentUser)); 
+        return response.data;
+    } catch (error) {
+        console.error("Error updating user:", error.response ? error.response.data : error.message);
+    }
+};
 
 export const handleResetPassword = (email,role)=> async (dispatch) => {
     dispatch(authRequest());

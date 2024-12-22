@@ -16,7 +16,7 @@ import Typography from "@mui/material/Typography";
 
 const BasicTable = () => {
   const dispatch = useDispatch();
-  const { tempRegisterDetail, loading, currentUser, error } = useSelector((state) => state.user);
+  const { tempRegisterDetail, loading, currentUser } = useSelector((state) => state.user);
   const [editableUserId, setEditableUserId] = useState(null);
   const [editedUserData, setEditedUserData] = useState({});
 
@@ -27,7 +27,7 @@ const BasicTable = () => {
   if (loading) return <p>Loading...</p>;
 
   // Handle error properly
-  if (error) return <p>{error.message || 'An unexpected error occurred.'}</p>;
+  // if (error) return <p>{error.message || 'An unexpected error occurred.'}</p>;
 
   const handleDelete = (id) => {
     dispatch(RegistrationhandleDelete(id, currentUser));

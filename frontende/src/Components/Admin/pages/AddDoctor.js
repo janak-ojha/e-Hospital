@@ -32,7 +32,7 @@ function DoctorForm() {
     e.preventDefault();
     if (!doctorName || !doctorEmail || !doctorType || !password) {
       setMessage("All fields are required.");
-      setTimeout(() => setMessage(""), 3000);
+      setTimeout(() => setMessage(""), 1000);
       return;
     }
 
@@ -53,11 +53,11 @@ function DoctorForm() {
     } else if (response === "Email already exists") {
       setMessage("Email already exists. Please try again.");
       setLoader(false); // Stop loader
-      setTimeout(() => setMessage(""), 3000);
+      setTimeout(() => setMessage(""), 1000);
     } else if (status === "error") {
       setMessage(response || "An error occurred.");
       setLoader(false); // Stop loader
-      setTimeout(() => setMessage(""), 3000);
+      setTimeout(() => setMessage(""), 1000);
     }
   }, [status, response, dispatch, navigate]);
 

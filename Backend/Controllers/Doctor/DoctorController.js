@@ -53,4 +53,68 @@ const GetAllDoctor = async (req, res) => {
     }
 };
 
-module.exports = {registerDoctor,GetAllDoctor};
+
+//delete user by id :
+const deleteDoctor = async (req, res) => {
+    const { id } = req.params;  // Get user ID from request params
+  
+    try {
+      // Find the user by ID and delete
+      const deletedUser = await Doctor.findByIdAndDelete(id);
+  
+      if (!deletedUser) {
+        return res.status(404).json({ message: "User not found" });
+      }
+  
+      res.status(200).json({ message: "User deleted successfully" });
+    } catch (error) {
+      console.error("Error deleting user:", error.message);
+      res.status(500).json({ message: "Error deleting user", error: error.message });
+    }
+  };
+
+
+  //updating user by id
+  const updateDoctorDetail = async (req, res) => {
+      console.log("Updating user with ID:", req.params.id);
+      const { id } = req.params;
+      const { doctorName, doctorEmail,doctorType, password,role, } = req.body;
+        
+      try {
+          // Find user by ID
+          const user = await Doctor.findById(id);
+          if (!user) {
+              return res.status(404).json({ message: "User not found" });
+          }
+          // Check if email is updated and already exists
+          if (doctorEmail && doctorEmail !== user.doctorEmail) {
+              const existingUser = await Doctor.findOne({ doctorEmail });
+              if (existingUser) {
+                  return res.status(400).json({ message: "Email already in use" });
+              }
+              user.doctorEmail = doctorEmail;
+          }
+          // Update fields
+          if (doctorName) user.doctorName = doctorName;
+          if (role) user.role = role;
+          if (doctorType) user.doctorType = doctorType;
+  
+          // If password is provided, hash and update it
+          if (password) {
+              const salt = await bcrypt.genSalt(10);
+              user.password = await bcrypt.hash(password, salt);
+          }
+  
+          // Save the updated user
+          const updatedUser = await user.save();
+          updatedUser.password = undefined; // Exclude password field
+  
+          res.status(200).json(updatedUser);
+      } catch (error) {
+          console.error("Error updating user:", error.message);
+          res.status(500).json({ message: "Error updating user", error: error.message });
+      }
+  };
+
+
+module.exports = {registerDoctor,GetAllDoctor,deleteDoctor,updateDoctorDetail};

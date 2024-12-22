@@ -9,6 +9,8 @@ const initialState={
     error:null,
     response:null,
     tempRegisterDetail: [],
+    DoctorDetail: [],
+    pharmaDetail:[],
     
 }
 
@@ -60,6 +62,14 @@ const userSlice = createSlice({
             state.loading=false;
             state.tempRegisterDetail=action.payload;
         },
+        getDoctorDetail:(state,action) =>{
+            state.loading=false;
+            state.DoctorDetail=action.payload;
+        },
+        getPharmaDetail:(state,action) =>{
+            state.loading=false;
+            state.pharmaDetail=action.payload;
+        },
         logout: (state) => {
             state.currentUser = null;
             state.currentRole = null;
@@ -80,6 +90,8 @@ export const{
     stuffAdded,
     underControl,
     getRofficedetail,
+    getDoctorDetail,
+    getPharmaDetail,
     logout,
 }=userSlice.actions;
 export const userReducer = userSlice.reducer;
