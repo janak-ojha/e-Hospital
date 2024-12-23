@@ -11,6 +11,7 @@ const initialState={
     tempRegisterDetail: [],
     DoctorDetail: [],
     pharmaDetail:[],
+    labDetail:[],
     
 }
 
@@ -70,6 +71,11 @@ const userSlice = createSlice({
             state.loading=false;
             state.pharmaDetail=action.payload;
         },
+        getLabDetail:(state,action) =>{
+            state.loading=false;
+            state.labDetail=action.payload;
+        },
+        
         logout: (state) => {
             state.currentUser = null;
             state.currentRole = null;
@@ -92,6 +98,7 @@ export const{
     getRofficedetail,
     getDoctorDetail,
     getPharmaDetail,
+    getLabDetail,
     logout,
 }=userSlice.actions;
 export const userReducer = userSlice.reducer;

@@ -6,7 +6,7 @@ const {RegisterOffice,GetAllRegisteredUsers, deleteRegisterUser, updateRegisterU
 const { jwtProtect } = require('../Middleware/authMiddleware.js');
 const {registerDoctor,GetAllDoctor, deleteDoctor, updateDoctorDetail} = require('../Controllers/Doctor/DoctorController.js');
 const { registerPharmacist,GetAllPharma, deletePharma, updatePharmaDetail } = require('../Controllers/Pharmacist/PharmaController.js');
-
+const { registerLab, GetAllLab, deleteLab, updateLabDetail } = require('../Controllers/Lab/LabController.js');
 
 
 /// admin routed
@@ -36,6 +36,12 @@ router.post("/registerPharmacist",jwtProtect,registerPharmacist);
 router.get("/pharmaDetail",jwtProtect,GetAllPharma);
 router.delete("/deletePharma/:id",jwtProtect,deletePharma);
 router.put("/updatePharma/:id",jwtProtect,updatePharmaDetail);
+
+//Lab route
+router.post("/registerLabTechnician",jwtProtect,registerLab);
+router.get("/labDetail",jwtProtect,GetAllLab);
+router.delete("/deleteLab/:id",jwtProtect,deleteLab);
+router.put("/updateLab/:id",jwtProtect,updateLabDetail);
 
 
 

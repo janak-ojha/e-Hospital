@@ -254,17 +254,17 @@ const AdminDrawer = () => {
                   </ListItemIcon>
                   <ListItemText primary="showPharmacist" title="Show Lab Technician" />
                 </ListItemButton>
-                <ListItemButton component={Link} to="/showLabTechnicial">
+                <ListItemButton component={Link} to="/showLabTechnician">
                   <ListItemIcon>
                     <ViewTimelineIcon
                       color={
-                        location.pathname.startsWith("/showLabTechnicial")
+                        location.pathname.startsWith("/showLabTechnician")
                           ? "primary"
                           : "inherit"
                       }
                     />
                   </ListItemIcon>
-                  <ListItemText primary="showLabTechnical" />
+                  <ListItemText primary="showLabTechnican" />
                 </ListItemButton>
               </React.Fragment>
               <Divider sx={{ my: 1 }} />
@@ -312,7 +312,7 @@ const AdminDrawer = () => {
             <Route path="/addLabTechnican" element={<AddLab />} />
             <Route path="/showDoctor" element={<ShowDoctors />} />
             <Route path="/showPharmacist" element={<Showpharma />} />
-            <Route path="/showLabTechnicial" element={<ShowLab />} />
+            <Route path="/showLabTechnician" element={<ShowLab />} />
             <Route path="/adminprofile" element={<Profile />} />
             <Route path="/addRegistration" element={<AddRegistration />} />
             <Route path="/ShowRegistration" element={<ShowRegistration />} />

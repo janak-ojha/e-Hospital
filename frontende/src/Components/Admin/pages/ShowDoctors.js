@@ -25,13 +25,11 @@ import {
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
-
 const DoctorDetail = () => {
   const dispatch = useDispatch();
   const { DoctorDetail, loading, error, currentUser } = useSelector(
     (state) => state.user
   );
-
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [selectedDoctor, setSelectedDoctor] = useState(null);
   const [updatedDoctorData, setUpdatedDoctorData] = useState({

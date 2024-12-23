@@ -11,7 +11,6 @@ import {
   fetchPharmaDetail,
   PharmahandleDelete,
   PharmahandleUpdate,
- 
 } from "../../../redux/userHandle"; // Import actions
 import CircularProgress from "@mui/material/CircularProgress";
 import {
@@ -26,7 +25,6 @@ import {
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
-
 const PharmacistDetail = () => {
   const dispatch = useDispatch();
   const { pharmaDetail, loading, error, currentUser } = useSelector(

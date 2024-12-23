@@ -10,7 +10,6 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { cancelDelete, registerUser } from "../../../redux/userHandle";
 import { useNavigate } from "react-router-dom";
-
 const PharmacistForm = () => {
   const [formData, setFormData] = useState({
     pharmacistName: "",
@@ -18,13 +17,11 @@ const PharmacistForm = () => {
     password: "",
     role: "Pharmacist", // Default role
   });
-
   const [message, setMessage] = useState("");
   const [loader, setLoader] = useState(false); // Loader state
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { status, response, currentUser } = useSelector((state) => state.user);
-
   useEffect(() => {
     if (status === "added") {
       setMessage("Registration successful!");
@@ -98,7 +95,6 @@ const PharmacistForm = () => {
         <Typography variant="h5" align="center" sx={{ marginBottom: 3 }}>
           Add Pharmacist
         </Typography>
-
         <Typography
           align="center"
           sx={{
@@ -108,7 +104,6 @@ const PharmacistForm = () => {
         >
           {message}
         </Typography>
-
         <form onSubmit={handleSubmit}>
           <Grid container spacing={3}>
             <Grid item xs={12}>
@@ -121,7 +116,6 @@ const PharmacistForm = () => {
                 required
               />
             </Grid>
-
             <Grid item xs={12}>
               <TextField
                 label="Pharmacist Email"
@@ -133,7 +127,6 @@ const PharmacistForm = () => {
                 required
               />
             </Grid>
-
             <Grid item xs={12}>
               <TextField
                 label="Password"
@@ -143,9 +136,9 @@ const PharmacistForm = () => {
                 onChange={handleChange}
                 fullWidth
                 required
+                autoComplete="new-password"
               />
             </Grid>
-
             <Grid item xs={12}>
               <Button
                 type="submit"
