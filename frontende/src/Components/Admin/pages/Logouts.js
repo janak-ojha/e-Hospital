@@ -67,11 +67,13 @@ const Logouts = () => {
             </DialogContentText>
           </DialogContent>
           <DialogActions>
+            {/* "No" Button to close the dialog */}
             <Button onClick={handleClose} color="secondary">
-              Cancel
+              No
             </Button>
+            {/* "Yes" Button to log out */}
             <Button onClick={handleLogout} color="primary" variant="contained">
-              Logout
+              Yes
             </Button>
           </DialogActions>
         </Dialog>
