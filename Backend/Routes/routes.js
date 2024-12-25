@@ -4,7 +4,7 @@ const router = express.Router();
 const {adminRegister, adminLogin,resetPasword,forgetPassword,newPassword,AdminDetail} = require("../Controllers/Admin/AdminController.js")
 const {RegisterOffice,GetAllRegisteredUsers, deleteRegisterUser, updateRegisterUser} = require("../Controllers/Registration/RegistrationControllers.js");
 const { jwtProtect } = require('../Middleware/authMiddleware.js');
-const {registerDoctor,GetAllDoctor, deleteDoctor, updateDoctorDetail} = require('../Controllers/Doctor/DoctorController.js');
+const {registerDoctor,GetAllDoctor, deleteDoctor, updateDoctorDetail, doctorLogin} = require('../Controllers/Doctor/DoctorController.js');
 const { registerPharmacist,GetAllPharma, deletePharma, updatePharmaDetail } = require('../Controllers/Pharmacist/PharmaController.js');
 const { registerLab, GetAllLab, deleteLab, updateLabDetail } = require('../Controllers/Lab/LabController.js');
 
@@ -27,6 +27,7 @@ router.put("/updateRegisterUser/:id", jwtProtect, updateRegisterUser);
 
 //Doctor Routes
 router.post("/registerDoctor",jwtProtect,registerDoctor);
+router.post("/logindoctor",doctorLogin);
 router.get("/doctorDetail",jwtProtect,GetAllDoctor);
 router.delete("/deleteDoctor/:id",jwtProtect,deleteDoctor);
 router.put("/updateDoctor/:id",jwtProtect,updateDoctorDetail);

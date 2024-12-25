@@ -39,7 +39,7 @@ export const registerUser = (fields, currentUser) => async (dispatch) => {
         console.log(data);
         if (data.email && data.officerLevel) {
             dispatch(stuffAdded());
-        }else if(data.doctorEmail && data.doctorType){
+        }else if(data.email && data.doctorType){
             dispatch(stuffAdded());  
         }else if(data.pharmacistEmail && data.pharmacistName){
             dispatch(stuffAdded());
@@ -61,13 +61,14 @@ export const registerUser = (fields, currentUser) => async (dispatch) => {
 
 export const loginUser = (fields, role) => async (dispatch) => {
    const { email, password } = fields;
+   console.log(email,password);
    dispatch(authRequest());
    try {
        const result = await axios.post(`http://localhost:5000/login${role}`, {
            email,
            password
        });
-       console.log(result);
+       console.log(result,"hello");
        if (result.data.role) {
            dispatch(authSuccess(result.data)); 
        } else {

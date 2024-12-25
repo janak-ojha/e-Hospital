@@ -45,7 +45,6 @@ const GetAllLab = async (req, res) => {
         if (labdetail.length === 0) {
             return res.status(404).json({ message: "No registered users found" });
         }
-        console.log(labdetail)
         res.status(200).json(labdetail); // Send populated data
         
     } catch (error) {

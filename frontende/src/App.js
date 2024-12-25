@@ -13,6 +13,7 @@ import AdminDashboard from "./Components/Admin/Dashboard/AdminDashboard";
 import DashboardLayoutSidebarCollapsed from "./Components/Admin/Dashboard/AdminHome";
 import Resetpassword from "./Components/pages/Resetpassword";
 import AdminDrawer from "./Components/Admin/Dashboard/AdminHome";
+import DoctorDashboard from "./Components/Doctor/Dashboard/DoctorDashboard";
 import { useSelector } from 'react-redux';
 // import { DashboardLayoutSidebarCollapsed  } from "./Components/Admin/Dashboard/AdminHome/DashboardLayoutSidebarCollapsed"; // Assuming you want to add this page here
 
@@ -36,6 +37,7 @@ function App() {
         
         {/* Admin Routes */}
         <Route path="/AdminDashboard" element={<AdminDashboard />} />
+        <Route path="/DoctorDashboard" element={<DoctorDashboard/>}/>
         {/* <Route path="/Adminhome" element={<AdminHome />} /> */}
         
         {/* Reset Password Route */}
@@ -53,6 +55,11 @@ function App() {
           <AdminDrawer/>
         </>
       }
+      {currentRole === "Doctor"&& 
+      <>
+      <DoctorDashboard/>
+      </>
+}
     </Router>
   );
 }

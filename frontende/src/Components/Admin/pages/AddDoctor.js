@@ -16,8 +16,8 @@ import { cancelDelete, registerUser } from "../../../redux/userHandle";
 import { useNavigate } from "react-router-dom";
 
 function DoctorForm() {
-  const [doctorName, setDoctorName] = useState("");
-  const [doctorEmail, setDoctorEmail] = useState("");
+  const [username, setDoctorName] = useState("");
+  const [email, setDoctorEmail] = useState("");
   const [doctorType, setDoctorType] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
@@ -30,14 +30,14 @@ function DoctorForm() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!doctorName || !doctorEmail || !doctorType || !password) {
+    if (!username || !email || !doctorType || !password) {
       setMessage("All fields are required.");
       setTimeout(() => setMessage(""), 1000);
       return;
     }
 
     setLoader(true); // Start loader
-    const fields = { doctorName, doctorEmail, password, doctorType, role };
+    const fields = { username, email, password, doctorType, role };
     dispatch(registerUser(fields, currentUser));
   };
 
@@ -104,7 +104,7 @@ function DoctorForm() {
               <TextField
                 fullWidth
                 label="Doctor Name"
-                value={doctorName}
+                value={username}
                 onChange={(e) => setDoctorName(e.target.value)}
                 required
                 autoComplete="doctorname"
@@ -116,7 +116,7 @@ function DoctorForm() {
               <TextField
                 fullWidth
                 label="Doctor Email"
-                value={doctorEmail}
+                value={email}
                 onChange={(e) => setDoctorEmail(e.target.value)}
                 type="email"
                 required

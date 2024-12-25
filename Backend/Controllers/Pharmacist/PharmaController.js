@@ -45,7 +45,7 @@ const GetAllPharma = async (req, res) => {
         if (pharmadetail.length === 0) {
             return res.status(404).json({ message: "No registered users found" });
         }
-        console.log(pharmadetail)
+        // console.log(pharmadetail)
         res.status(200).json(pharmadetail); // Send populated data
         
     } catch (error) {

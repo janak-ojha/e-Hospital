@@ -42,7 +42,7 @@ const  adminRegister = async(req,res) =>{
     }
 }
 
-//login all
+//login Admin
 const adminLogin = async (req, res) => {
     const { email, password } = req.body;
 

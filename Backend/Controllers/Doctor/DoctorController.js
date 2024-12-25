@@ -1,12 +1,16 @@
-const bcrypt = require("bcryptjs");
 const Doctor = require("../../Models/Doctor"); // Update the path as per your directory structure
+const bcrypt = require("bcryptjs");
+const TokenGenerate = require("../../Middleware/Tokengenerate");
+const jwt = require("jsonwebtoken");
+
 
 // Register Doctor Handler
 const registerDoctor = async (req, res) => {
-    const { doctorName, doctorEmail,doctorType, password,role, } = req.body;
+    const { username, email,doctorType, password,role, } = req.body;
+    console.log(username,email);
     try {
         // Check if email already exists
-        const existingDoctor = await Doctor.findOne({doctorEmail});
+        const existingDoctor = await Doctor.findOne({email});
         if (existingDoctor) {
             return res.status(400).json({ message: "Email already exists" });
         }
@@ -15,9 +19,9 @@ const registerDoctor = async (req, res) => {
         const hashedPassword = await bcrypt.hash(password, salt);
         // Create a new doctor entry
         const newDoctor = new Doctor({
-            doctorName,
+            username,
             hospitalname: req.user.id, // Assuming the logged-in admin ID is available in req.user.id
-            doctorEmail,
+            email,
             doctorType,
             password: hashedPassword,
             role,
@@ -34,6 +38,56 @@ const registerDoctor = async (req, res) => {
     }
 };
 
+//login Doctor
+const doctorLogin = async (req, res) => {
+    const { email, password } = req.body;
+    console.log(email,password);
+    try {
+        // Validate input
+        if (!email || !password) {
+            return res.status(400).json({ message: "Email and password are required" });
+        }
+
+        // Find the admin user by email
+        const result = await Doctor.findOne({ email });
+        if (!result) {
+            return res.status(404).json({ message: "User not found" });
+        }
+     
+        // Validate the password
+        const isPasswordValid = await bcrypt.compare(password, result.password);
+        if (!isPasswordValid) {
+            return res.status(401).json({ message: "Invalid password" });
+        }
+        console.log(result);
+        console.log( {
+            id: result._id,
+            username: result.username,
+            hospitalname: result.hospitalname,
+            email: result.email,
+            doctorType: result.doctorType,
+            role: result.role,
+            token: TokenGenerate(result._id),
+        });
+
+
+        res.status(200).json({
+            id: result._id,
+            username: result.username,
+            hospitalname: result.hospitalname,
+            email: result.email,
+            doctorType: result.doctorType,
+            role: result.role,
+            token: TokenGenerate(result._id), // Ensure `TokenGenerate` is defined and secure
+        });
+
+       
+        
+    } catch (error) {
+        // Internal server error
+        res.status(500).json({ message: "An error occurred", error: error.message });
+    }
+};
 
 // geting doctor detail
 const GetAllDoctor = async (req, res) => {
@@ -78,7 +132,7 @@ const deleteDoctor = async (req, res) => {
   const updateDoctorDetail = async (req, res) => {
       console.log("Updating user with ID:", req.params.id);
       const { id } = req.params;
-      const { doctorName, doctorEmail,doctorType, password,role, } = req.body;
+      const { username, email,doctorType, password,role, } = req.body;
         
       try {
           // Find user by ID
@@ -87,15 +141,15 @@ const deleteDoctor = async (req, res) => {
               return res.status(404).json({ message: "User not found" });
           }
           // Check if email is updated and already exists
-          if (doctorEmail && doctorEmail !== user.doctorEmail) {
-              const existingUser = await Doctor.findOne({ doctorEmail });
+          if (email && email !== user.email) {
+              const existingUser = await Doctor.findOne({ email });
               if (existingUser) {
                   return res.status(400).json({ message: "Email already in use" });
               }
-              user.doctorEmail = doctorEmail;
+              user.email = email;
           }
           // Update fields
-          if (doctorName) user.doctorName = doctorName;
+          if (username) user.username = username;
           if (role) user.role = role;
           if (doctorType) user.doctorType = doctorType;
   
@@ -117,4 +171,4 @@ const deleteDoctor = async (req, res) => {
   };
 
 
-module.exports = {registerDoctor,GetAllDoctor,deleteDoctor,updateDoctorDetail};
+module.exports = {registerDoctor,GetAllDoctor,deleteDoctor,updateDoctorDetail,doctorLogin};

@@ -1,7 +1,7 @@
 const mongoose=require("mongoose");
 
 const DoctorSchema = new mongoose.Schema({
-    doctorName:{
+    username:{
        type:String,
        required:true,
     },
@@ -10,7 +10,7 @@ const DoctorSchema = new mongoose.Schema({
         ref:"Admin",
         required:true,
     },
-    doctorEmail:{
+    email:{
         type:String,
         required:true,
         unique:true

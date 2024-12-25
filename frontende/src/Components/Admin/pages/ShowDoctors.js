@@ -33,8 +33,8 @@ const DoctorDetail = () => {
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [selectedDoctor, setSelectedDoctor] = useState(null);
   const [updatedDoctorData, setUpdatedDoctorData] = useState({
-    doctorName: "",
-    doctorEmail: "",
+    username: "",
+    email: "",
     doctorType: "",
   });
 
@@ -47,8 +47,8 @@ const DoctorDetail = () => {
   const handleEdit = (doctor) => {
     setSelectedDoctor(doctor);
     setUpdatedDoctorData({
-      doctorName: doctor.doctorName,
-      doctorEmail: doctor.doctorEmail,
+      username: doctor.username,
+      email: doctor.email,
       doctorType: doctor.doctorType,
     });
     setEditModalOpen(true);
@@ -93,8 +93,8 @@ const DoctorDetail = () => {
                   }}
                 >
                   <TableCell>{index + 1}</TableCell>
-                  <TableCell>{doctor.doctorName}</TableCell>
-                  <TableCell>{doctor.doctorEmail}</TableCell>
+                  <TableCell>{doctor.username}</TableCell>
+                  <TableCell>{doctor.email}</TableCell>
                   <TableCell>{doctor.doctorType}</TableCell>
                   <TableCell>
                     {/* Action buttons */}
@@ -132,18 +132,18 @@ const DoctorDetail = () => {
             label="Doctor Name"
             fullWidth
             margin="dense"
-            value={updatedDoctorData.doctorName}
+            value={updatedDoctorData.username}
             onChange={(e) =>
-              setUpdatedDoctorData({ ...updatedDoctorData, doctorName: e.target.value })
+              setUpdatedDoctorData({ ...updatedDoctorData, username: e.target.value })
             }
           />
           <TextField
             label="Doctor Email"
             fullWidth
             margin="dense"
-            value={updatedDoctorData.doctorEmail}
+            value={updatedDoctorData.email}
             onChange={(e) =>
-              setUpdatedDoctorData({ ...updatedDoctorData, doctorEmail: e.target.value })
+              setUpdatedDoctorData({ ...updatedDoctorData, email: e.target.value })
             }
           />
           <TextField
