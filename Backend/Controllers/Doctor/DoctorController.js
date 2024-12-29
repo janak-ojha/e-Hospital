@@ -2,6 +2,7 @@ const Doctor = require("../../Models/Doctor"); // Update the path as per your di
 const bcrypt = require("bcryptjs");
 const TokenGenerate = require("../../Middleware/Tokengenerate");
 const jwt = require("jsonwebtoken");
+const mongoose = require("mongoose");
 
 
 // Register Doctor Handler
@@ -41,7 +42,6 @@ const registerDoctor = async (req, res) => {
 //login Doctor
 const doctorLogin = async (req, res) => {
     const { email, password } = req.body;
-    console.log(email,password);
     try {
         // Validate input
         if (!email || !password) {
@@ -59,18 +59,6 @@ const doctorLogin = async (req, res) => {
         if (!isPasswordValid) {
             return res.status(401).json({ message: "Invalid password" });
         }
-        console.log(result);
-        console.log( {
-            id: result._id,
-            username: result.username,
-            hospitalname: result.hospitalname,
-            email: result.email,
-            doctorType: result.doctorType,
-            role: result.role,
-            token: TokenGenerate(result._id),
-        });
-
-
         res.status(200).json({
             id: result._id,
             username: result.username,
@@ -93,14 +81,13 @@ const doctorLogin = async (req, res) => {
 const GetAllDoctor = async (req, res) => {
     try {
         // Fetch doctors associated with the logged-in admin's hospital ID (req.user.id)
+        console.log(req.user.id);
         const DoctorUsers = await Doctor.find({ hospitalname: req.user.id })
             .select("-password") // Exclude password from response
             .populate("hospitalname", "hospitalname"); // Populate hospital name if needed
-
         if (DoctorUsers.length === 0) {
             return res.status(404).json({ message: "No doctors found for this hospital" });
         }
-
         res.status(200).json(DoctorUsers);
     } catch (error) {
         res.status(500).json({ message: "Server error, could not fetch doctors", error: error.message });
@@ -171,4 +158,38 @@ const deleteDoctor = async (req, res) => {
   };
 
 
-module.exports = {registerDoctor,GetAllDoctor,deleteDoctor,updateDoctorDetail,doctorLogin};
+ // Fetching all doctors for a specific hospital
+ const AllDoctorForSpecificHospital = async (req, res) => {
+    console.log("Request Params:", req.params);
+    const { hospitalId } = req.params;
+    console.log("Hospital ID:", hospitalId);
+    try {
+        // Correct way to create ObjectId using createFromHexString
+        if (!mongoose.Types.ObjectId.isValid(hospitalId)) {
+            return res.status(400).json({ message: "Invalid hospital ID format." });
+        }
+
+        const hospitalObjectId = mongoose.Types.ObjectId.createFromHexString(hospitalId);
+        const doctor = await Doctor.find({ hospitalname: hospitalObjectId });
+         console.log("Doctors fetched (no populate):", doctor);  // Check if the basic query works
+
+      
+        // Fetch doctors for the specific hospital
+        const doctors = await Doctor.find({ hospitalname: hospitalObjectId })
+            .populate("hospitalname", "hospitalname username ");
+
+        // Check if doctors are found
+        if (!doctors || doctors.length === 0) {
+            return res.status(404).json({ message: "No doctors found for this hospital." });
+        }
+       
+        // Send the doctors' data as a response
+        res.status(200).json(doctors);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Server Error", error });
+    }
+};
+
+
+module.exports = {registerDoctor,GetAllDoctor,deleteDoctor,updateDoctorDetail,doctorLogin,AllDoctorForSpecificHospital};

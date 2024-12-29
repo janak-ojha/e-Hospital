@@ -1,5 +1,4 @@
 import {createSlice} from "@reduxjs/toolkit";
-
 const initialState={
     status:"idle",
     loading:false,
@@ -12,9 +11,7 @@ const initialState={
     DoctorDetail: [],
     pharmaDetail:[],
     labDetail:[],
-    
 }
-
 const userSlice = createSlice({
     name:"user",
     initialState,
@@ -84,7 +81,6 @@ const userSlice = createSlice({
           },
     },
 });
-
 export const{
     authRequest,
     authSuccess,

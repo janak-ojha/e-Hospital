@@ -13,7 +13,6 @@ import {
   Drawer as MuiDrawer,
   AppBar as MuiAppBar,
 } from "@mui/material";
-
 import {
   Divider,
   ListItemButton,
@@ -22,7 +21,6 @@ import {
   ListSubheader,
 } from "@mui/material";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-
 import HomeIcon from "@mui/icons-material/Home";
 import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
 import ExitToAppIcon from "@mui/icons-material/ExitToApp";
@@ -31,17 +29,17 @@ import SupervisorAccountOutlinedIcon from "@mui/icons-material/SupervisorAccount
 import AssignmentIcon from "@mui/icons-material/Assignment";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import AppRegistrationIcon from '@mui/icons-material/AppRegistration';
-import PatientDetail from "../Pages/PatientDetail";
-
-
 import {
   BrowserRouter as Router,
   Routes,
   Route,
   Navigate,
 } from "react-router-dom";
-import DoctorHome from "./DoctorHome";
 import Logouts from "../../Admin/pages/Logouts";
+import OfficerHome from "./OfficerHome";
+import PatientDetail from "../../Doctor/Pages/PatientDetail";
+import PatientsRegister from "../Pages/PatientsRegister";
+
 
 
 
@@ -55,7 +53,6 @@ const AdminDrawer = () => {
     setOpen(!open);
   };
   const drawerWidth = 240;
-
   const AppBar = styled(MuiAppBar, {
     shouldForwardProp: (prop) => prop !== "open",
   })(({ theme, open }) => ({
@@ -129,7 +126,6 @@ const AdminDrawer = () => {
             </Typography>
           </Toolbar>
         </AppBar>
-
         <Drawer
           variant="permanent"
           open={open}
@@ -148,7 +144,7 @@ const AdminDrawer = () => {
                   <ListItemIcon>
                     <HomeIcon
                       color={
-                        location.pathname === "/Doctorhome" ||
+                        location.pathname === "/Officehome" ||
                         location.pathname === "/"
                           ? "primary"
                           : "inherit"
@@ -157,12 +153,12 @@ const AdminDrawer = () => {
                   </ListItemIcon>
                   <ListItemText primary="Home" />
                 </ListItemButton>
-                <ListItemButton component={Link} to="/patientDetail" title="PatientDetails">
+                <ListItemButton component={Link} to="/registerPatient" title="registerPatient">
                   <ListItemIcon>
                   <AppRegistrationIcon
                       style={{ fontWeight: "bolder", fontSize: "23px" }}
                       color={
-                        location.pathname.startsWith("/patientDetail")
+                        location.pathname.startsWith("/registerPatient")
                           ? "primary"
                           : "inherit"
                       }
@@ -207,10 +203,10 @@ const AdminDrawer = () => {
         <Box component="main" sx={styles.boxStyled}>
           <Toolbar />
           <Routes>
-            <Route path="/Doctorhome" element={<DoctorHome />} />
-            <Route path="/patientDetail" element={<PatientDetail />} />
+            <Route path="/registerPatient" element={<PatientsRegister/>} /> 
+            <Route path="/Officehome" element={<OfficerHome />} />
             <Route path="/adminlogout" element={<Logouts />} />
-            <Route path="*" element={<Navigate to="/Doctorhome" />} />
+            <Route path="*" element={<Navigate to="/Officehome" />} />
           </Routes>
         </Box>
       </Box>

@@ -1,8 +1,10 @@
 const bcrypt = require("bcryptjs");
 const Registeroffice = require("../../Models/Registration");
+const TokenGenerate = require("../../Middleware/Tokengenerate");
+const jwt = require("jsonwebtoken");
 
 // Register Office Handler
-const RegisterOffice = async (req, res) => {
+const RegisterOffices = async (req, res) => {
     const { name, email, password, role,officerLevel } = req.body;
 
     try {
@@ -34,6 +36,57 @@ const RegisterOffice = async (req, res) => {
          res.status(500).json(error.message);
     }
 };
+
+
+//login Doctor
+const officeLogin = async (req, res) => {
+    const { email, password } = req.body;
+    console.log(email,password);
+    try {
+        // Validate input
+        if (!email || !password) {
+            return res.status(400).json({ message: "Email and password are required" });
+        }
+
+        // Find the admin user by email
+        const result = await Registeroffice.findOne({ email });
+        if (!result) {
+            return res.status(404).json({ message: "User not found" });
+        }
+        console.log(result);
+        // Validate the password
+        const isPasswordValid = await bcrypt.compare(password, result.password);
+        if (!isPasswordValid) {
+            return res.status(401).json({ message: "Invalid password" });
+        }
+        console.log(result);
+        console.log( {
+            id: result._id,
+            name: result.username,
+            hospitalname: result.hospitalname,
+            email: result.email,
+            officerLevel: result.officerLevel,
+            role: result.role,
+            token: TokenGenerate(result._id),
+        });
+
+
+        res.status(200).json({
+            id: result._id,
+            name: result.name,
+            hospitalname: result.hospitalname,
+            email: result.email,
+            officerLevel: result.officerLevel,
+            role: result.role,
+            token: TokenGenerate(result._id), // Ensure `TokenGenerate` is defined and secure
+        });
+
+    } catch (error) {
+        // Internal server error
+        res.status(500).json({ message: "An error occurred", error: error.message });
+    }
+};
+
 
 // get all registered user detail
 const GetAllRegisteredUsers = async (req, res) => {
@@ -117,6 +170,9 @@ const updateRegisterUser = async (req, res) => {
 };
 
 
-module.exports = { RegisterOffice,GetAllRegisteredUsers,deleteRegisterUser ,updateRegisterUser};
+// fetch doctor detail
+
+
+module.exports = { RegisterOffices,GetAllRegisteredUsers,deleteRegisterUser ,updateRegisterUser,officeLogin};
 
 

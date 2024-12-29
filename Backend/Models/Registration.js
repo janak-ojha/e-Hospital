@@ -21,7 +21,7 @@ const RegistrationSchema = new mongoose.Schema({
     },
     role:{
         type:String,
-        default:"Teacher",
+        default:"RegisterOffice",
     },
     officerLevel:{
         type:String,

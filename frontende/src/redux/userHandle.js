@@ -62,6 +62,7 @@ export const registerUser = (fields, currentUser) => async (dispatch) => {
 export const loginUser = (fields, role) => async (dispatch) => {
    const { email, password } = fields;
    console.log(email,password);
+   console.log(role);
    dispatch(authRequest());
    try {
        const result = await axios.post(`http://localhost:5000/login${role}`, {
@@ -222,7 +223,31 @@ export const DeletehandleUpdate = (id, userdata, currentUser) => async (dispatch
     }
 };
 
+////doctor detail for registration by hospital id:
+export const AllDoctorForSpecificHospitals = (hospitalId, currentUser) => async (dispatch) => {
+    try {
+        // Get the token from localStorage or the currentUser object
+        const token = localStorage.getItem("token") || currentUser?.token;
 
+        // Make an API call to fetch doctors
+        const response = await axios.get(`http://localhost:5000/doctors/${hospitalId}`, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+
+        // Log the data for debugging
+        console.log("Doctor Users:", response.data);
+
+        // Dispatch the response data to the Redux store
+        dispatch(getDoctorDetail(response.data));
+    } catch (error) {
+        console.error("Error fetching doctors:", error);
+
+        // Dispatch an error action to Redux store
+        dispatch(authError(error.response?.data || "Something went wrong while fetching doctors"));
+    }
+};
 
 ///////************ Pharmaparts  **********///////
 

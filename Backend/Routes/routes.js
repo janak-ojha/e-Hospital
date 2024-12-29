@@ -2,9 +2,9 @@
 const express = require('express');
 const router = express.Router(); 
 const {adminRegister, adminLogin,resetPasword,forgetPassword,newPassword,AdminDetail} = require("../Controllers/Admin/AdminController.js")
-const {RegisterOffice,GetAllRegisteredUsers, deleteRegisterUser, updateRegisterUser} = require("../Controllers/Registration/RegistrationControllers.js");
+const {RegisterOffice,GetAllRegisteredUsers, deleteRegisterUser, updateRegisterUser, officeLogin, RegisterOffices} = require("../Controllers/Registration/RegistrationControllers.js");
 const { jwtProtect } = require('../Middleware/authMiddleware.js');
-const {registerDoctor,GetAllDoctor, deleteDoctor, updateDoctorDetail, doctorLogin} = require('../Controllers/Doctor/DoctorController.js');
+const {registerDoctor,GetAllDoctor, deleteDoctor, updateDoctorDetail, doctorLogin, AllDoctorForSpecificHospital} = require('../Controllers/Doctor/DoctorController.js');
 const { registerPharmacist,GetAllPharma, deletePharma, updatePharmaDetail } = require('../Controllers/Pharmacist/PharmaController.js');
 const { registerLab, GetAllLab, deleteLab, updateLabDetail } = require('../Controllers/Lab/LabController.js');
 
@@ -20,7 +20,8 @@ router.get("/forgetpassword/:id/:token/:role",forgetPassword);
 router.get("/newpassword/:id/:token/:role",newPassword);
 
 // Register Office Routes
-router.post("/registerRegisterOffice", jwtProtect, RegisterOffice);
+router.post("/registerRegisterOffice", jwtProtect, RegisterOffices);
+router.post("/loginregistration",officeLogin);
 router.get("/registeredDetail",jwtProtect,GetAllRegisteredUsers);
 router.delete("/deleteRegisterUser/:id", jwtProtect, deleteRegisterUser);
 router.put("/updateRegisterUser/:id", jwtProtect, updateRegisterUser);
@@ -31,6 +32,7 @@ router.post("/logindoctor",doctorLogin);
 router.get("/doctorDetail",jwtProtect,GetAllDoctor);
 router.delete("/deleteDoctor/:id",jwtProtect,deleteDoctor);
 router.put("/updateDoctor/:id",jwtProtect,updateDoctorDetail);
+router.get("/doctors/:hospitalId",jwtProtect,AllDoctorForSpecificHospital);
 
 //Pharmacist route
 router.post("/registerPharmacist",jwtProtect,registerPharmacist);
